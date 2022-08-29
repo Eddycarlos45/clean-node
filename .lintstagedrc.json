@@ -1,5 +1,5 @@
 {
-  "src/**/*.+(js|json|ts|tsx)": [
+  "*.ts": [
     "eslint 'src/**' --fix",
     "npm run test:staged"
   ]
