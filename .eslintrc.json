@@ -1,6 +1,12 @@
 {
   "extends": "standard-with-typescript",
+  "rules": {
+    "camelcase": "off",
+    "@typescript-eslint/camelcase": [
+      "off"
+    ]
+  },
   "parserOptions": {
-   "project": "./tsconfig.json"
+    "project": "./tsconfig.json"
   }
 }
