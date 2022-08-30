@@ -9,7 +9,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*": [
+    "src/**/*.ts": [
       "npm lint --fix"
     ]
   },
