@@ -10,8 +10,7 @@
   },
   "lint-staged": {
     "src/**/*": [
-      "npm lint --fix",
-      "git add"
+      "npm lint --fix"
     ]
   },
   "scripts": {
