@@ -33,6 +33,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 400 if no password is provided', () => {
     const sut = new SignUpController()
+    console.log('ola')
     const httpRequest = {
       body: {
         email: 'any_email@email.com',
