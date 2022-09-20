@@ -1,9 +1,5 @@
 import { DbAddAccount } from './db-add-account'
-import { Encrypter } from './db-add-account-protocols'
-interface SutTypes {
-  sut: DbAddAccount
-  encrypterStup: Encrypter
-}
+import { AccountModel, AddAccountModel, AddAccountRepository, Encrypter } from './db-add-account-protocols'
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStup implements Encrypter {
@@ -15,11 +11,33 @@ const makeEncrypter = (): Encrypter => {
   return new EncrypterStup()
 }
 
+const makeAddAccountRepository = (): AddAccountRepository => {
+  class AddAccountRepositoryStup implements AddAccountRepository {
+    async add (accountData: AddAccountModel): Promise<AccountModel> {
+      const fakeAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'hashed_password'
+      }
+      return await new Promise(resolve => resolve(fakeAccount))
+    }
+  }
+
+  return new AddAccountRepositoryStup()
+}
+
+interface SutTypes {
+  sut: DbAddAccount
+  encrypterStup: Encrypter
+  addAccountRepositoryStup: AddAccountRepository
+}
+
 const makeSut = (): SutTypes => {
   const encrypterStup = makeEncrypter()
-  const sut = new DbAddAccount(encrypterStup)
-
-  return { sut, encrypterStup }
+  const addAccountRepositoryStup = makeAddAccountRepository()
+  const sut = new DbAddAccount(encrypterStup, addAccountRepositoryStup)
+  return { sut, encrypterStup, addAccountRepositoryStup }
 }
 
 describe('DbAddAccount Usecase', () => {
@@ -45,5 +63,21 @@ describe('DbAddAccount Usecase', () => {
     }
     const promise = sut.add(accountData)
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call AddAccountRepository with correct values', async () => {
+    const { sut, addAccountRepositoryStup } = makeSut()
+    const addSpy = jest.spyOn(addAccountRepositoryStup, 'add')
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+    await sut.add(accountData)
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'hashed_password'
+    })
   })
 })
