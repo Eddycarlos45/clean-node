@@ -3,6 +3,7 @@
   "rules": {
     "camelcase": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/camelcase": [
       "off"
     ]
